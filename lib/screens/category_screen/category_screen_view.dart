@@ -41,6 +41,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
         ],
       ),
       body: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
         child: Column(
           children: [
             SizedBox(height: 10),

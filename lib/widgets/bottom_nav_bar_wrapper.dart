@@ -1,5 +1,7 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:foodie_cart/icons/svg_icons.dart';
 
 import '../screens/cart_screen/cart_screen_view.dart';
 import '../screens/category_screen/category_screen_view.dart';
@@ -63,22 +65,33 @@ class _ScaffoldWithBottomNavBarState extends State<ScaffoldWithBottomNavBar> {
       // the usual BottomNavigationBar
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
-        items: const [
+        items: [
           BottomNavigationBarItem(
-              icon: Icon(Icons.home_outlined), label: 'Главная'),
-          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Поиск'),
+            icon: SvgPicture.string(
+              SvgIcons.svgHome(_currentIndex==0),
+            ),
+            label: 'Главная',
+          ),
           BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_cart), label: 'Корзина'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Аккаунт'),
+              icon: SvgPicture.string(
+                SvgIcons.svgSearch(_currentIndex==1),
+              ),
+              label: 'Поиск'),
+          BottomNavigationBarItem(
+              icon: SvgPicture.string(
+                SvgIcons.svgCart(_currentIndex==2),
+              ),
+              label: 'Корзина'),
+          BottomNavigationBarItem(
+            icon: SvgPicture.string(
+              SvgIcons.svgProfile(_currentIndex==3),
+            ),
+            label: 'Аккаунт',
+          ),
         ],
         onTap: (index) {
           if (index != _currentIndex) {
             setState(() => _currentIndex = index);
-            // if(index==0){
-            //   _routerDelegates[0].update(rebuild: false);
-            // }else if(index==2){
-            //   _routerDelegates[1].update(rebuild: false);
-            // }
           }
         },
       ),
@@ -101,10 +114,12 @@ class ALocation extends BeamLocation<BeamState> {
           child: MainScreen(),
         ),
         if (state.uri.pathSegments.length == 2)
-           BeamPage(
+          BeamPage(
             key: ValueKey('a/details'),
             title: 'Details A',
-            child: CategoryScreen(categoryName: state.pathParameters["categoryName"]!,),
+            child: CategoryScreen(
+              categoryName: state.pathParameters["categoryName"]!,
+            ),
           ),
       ];
 }
