@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
 
-import '../../icons/svg_icons.dart';
 import '../../services/http_helper.dart';
 import '../../widgets/app_bar_widget.dart';
-import '../category_screen/category_screen_provider.dart';
-import '../category_screen/category_screen_view.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -35,17 +31,8 @@ class MainScreen extends StatelessWidget {
                       ),
                       itemBuilder: (context, index) => GestureDetector(
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            PageRouteBuilder(
-                              pageBuilder: (context, animation1, animation2) =>
-                                  CategoryScreen(
-                                categoryName:
-                                    snapshot.data!.listCategories![index].name!,
-                              ),
-                              transitionDuration: Duration.zero,
-                              reverseTransitionDuration: Duration.zero,
-                            ),
+                          context.go(
+                            '/main/details/${snapshot.data!.listCategories![index].name}',
                           );
                         },
                         child: Stack(

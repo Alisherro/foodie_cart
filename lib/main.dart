@@ -1,29 +1,159 @@
-import 'package:beamer/beamer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodie_cart/screens/cart_screen/cart_screen_provider.dart';
+import 'package:foodie_cart/screens/cart_screen/cart_screen_view.dart';
 import 'package:foodie_cart/screens/category_screen/category_screen_provider.dart';
+import 'package:foodie_cart/screens/category_screen/category_screen_view.dart';
+import 'package:foodie_cart/screens/main_screen/main_screen_view.dart';
 import 'package:foodie_cart/widgets/app_bar_widget.dart';
 import 'package:foodie_cart/widgets/bottom_nav_bar_wrapper.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:intl/intl.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
-  initializeDateFormatting("ar_SA", null);
+  initializeDateFormatting("ru_RU", null);
   runApp(MyApp());
 }
+
+final GlobalKey<NavigatorState> _rootNavigatorKey =
+    GlobalKey<NavigatorState>(debugLabel: 'root');
+final GlobalKey<NavigatorState> _sectionNavigatorKey =
+    GlobalKey<NavigatorState>(debugLabel: 'sectionANav');
 
 class MyApp extends StatelessWidget {
   MyApp({Key? key}) : super(key: key);
 
-  final routerDelegate = BeamerDelegate(
-    initialPath: '/a',
-    locationBuilder: RoutesLocationBuilder(
-      routes: {
-        '/a': (context, state, data) => const ScaffoldWithBottomNavBar(),
-      },
-    ),
+
+  final GoRouter _routera = GoRouter(
+
+    navigatorKey:_rootNavigatorKey,
+    initialLocation: '/main',
+    routes: <RouteBase>[
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) {
+          return ScaffoldWithBottomNavBar(navigationShell: navigationShell);
+        },
+        branches: <StatefulShellBranch>[
+          StatefulShellBranch(
+            navigatorKey: _sectionNavigatorKey,
+            routes: <RouteBase>[
+              GoRoute(
+                path: '/main',
+                pageBuilder: (BuildContext context, GoRouterState state) {
+                  return CustomTransitionPage(
+                    child: const MainScreen(),
+                    transitionDuration: const Duration(milliseconds: 150),
+                    transitionsBuilder: (BuildContext context,
+                        Animation<double> animation,
+                        Animation<double> secondaryAnimation,
+                        Widget child) {
+                      return FadeTransition(
+                        opacity:
+                        CurveTween(curve: Curves.easeInOut).animate(animation),
+                        child: child,
+                      );
+                    },
+                  );
+                },
+                routes: [
+                  GoRoute(
+                    path: 'details/:id',
+                    pageBuilder: (BuildContext context, GoRouterState state) {
+                      return CustomTransitionPage(
+                        child: CategoryScreen(
+                            categoryName:
+                            state.pathParameters["id"] ?? 'Title Default'),
+                        transitionDuration: const Duration(milliseconds: 150),
+                        transitionsBuilder: (BuildContext context,
+                            Animation<double> animation,
+                            Animation<double> secondaryAnimation,
+                            Widget child) {
+                          return FadeTransition(
+                            opacity: CurveTween(curve: Curves.easeInOut)
+                                .animate(animation),
+                            child: child,
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/search',
+                pageBuilder: (BuildContext context, GoRouterState state) {
+                  return CustomTransitionPage(
+                    child: Container(),
+                    transitionDuration: const Duration(milliseconds: 150),
+                    transitionsBuilder: (BuildContext context,
+                        Animation<double> animation,
+                        Animation<double> secondaryAnimation,
+                        Widget child) {
+                      return FadeTransition(
+                        opacity:
+                        CurveTween(curve: Curves.easeInOut).animate(animation),
+                        child: child,
+                      );
+                    },
+                  );
+                },
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/cart',
+                pageBuilder: (BuildContext context, GoRouterState state) {
+                  return CustomTransitionPage(
+                    child: const CartScreen(),
+                    transitionDuration: const Duration(milliseconds: 150),
+                    transitionsBuilder: (BuildContext context,
+                        Animation<double> animation,
+                        Animation<double> secondaryAnimation,
+                        Widget child) {
+                      return FadeTransition(
+                        opacity:
+                        CurveTween(curve: Curves.easeInOut).animate(animation),
+                        child: child,
+                      );
+                    },
+                  );
+                },
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/profile',
+                pageBuilder: (BuildContext context, GoRouterState state) {
+                  return CustomTransitionPage(
+                    child: Container(),
+                    transitionDuration: const Duration(milliseconds: 150),
+                    transitionsBuilder: (BuildContext context,
+                        Animation<double> animation,
+                        Animation<double> secondaryAnimation,
+                        Widget child) {
+                      return FadeTransition(
+                        opacity:
+                        CurveTween(curve: Curves.easeInOut).animate(animation),
+                        child: child,
+                      );
+                    },
+                  );
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
+    ],
   );
 
   @override
@@ -38,10 +168,7 @@ class MyApp extends StatelessWidget {
             create: (_) => AppBarProvider(context)),
       ],
       child: MaterialApp.router(
-        routerDelegate: routerDelegate,
-        routeInformationParser: BeamerParser(),
-        backButtonDispatcher:
-            BeamerBackButtonDispatcher(delegate: routerDelegate),
+        routerConfig: _routera,
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           useMaterial3: false,

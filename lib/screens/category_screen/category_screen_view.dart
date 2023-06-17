@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:foodie_cart/screens/category_screen/category_screen_provider.dart';
-import 'package:foodie_cart/services/http_helper.dart';
 import 'package:foodie_cart/widgets/dish_widget.dart';
 import 'package:provider/provider.dart';
 
 import '../../widgets/filter_chip.dart';
 
 class CategoryScreen extends StatefulWidget {
-  CategoryScreen({Key? key, required this.categoryName}) : super(key: key);
+  const CategoryScreen({Key? key, required this.categoryName}) : super(key: key);
 
   final String categoryName;
 

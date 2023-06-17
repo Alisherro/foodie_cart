@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:foodie_cart/icons/svg_icons.dart';
 import 'package:foodie_cart/screens/cart_screen/cart_screen_provider.dart';
 import 'package:foodie_cart/widgets/cart_item_widget.dart';
 import 'package:provider/provider.dart';
